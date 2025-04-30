@@ -1,5 +1,6 @@
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import {InputHTMLAttributes} from "react";
 
 type InputFieldProps = {
     label: string,
@@ -7,7 +8,8 @@ type InputFieldProps = {
     type: string,
     placeholder?: string,
     required: boolean,
-}
+
+} & InputHTMLAttributes<HTMLInputElement>
 
 export default function InputField({ label, id, type, placeholder, required, ...props }: InputFieldProps) {
     return (
