@@ -1,0 +1,26 @@
+import api from "@/lib/axios";
+import {VerificationPatient} from "@/types/verifikasi/types";
+import {mapPasienToVerificationPatient} from "@/lib/handlers/admin/mapPasienToVerificationPatient";
+
+export const fetchUnverifiedPatients = async () : Promise<VerificationPatient[]> => {
+    const res = await api.get("/admin/pasien-belum-terverifikasi")
+    return res.data.map(mapPasienToVerificationPatient);
+}
+
+export const fetchVerificationStats = async (): Promise<{
+    pending: number;
+    verifiedToday: number;
+}> => {
+    const res = await api.get("/admin/verification-statistics");
+    return res.data;
+}
+
+export const fetchUnverifiedPatientById = async (id: string) => {
+    const res = await api.get(`/admin/pasien-belum-terverifikasi/${id}`)
+    return res.data;
+}
+
+export const verifyPatientById = async (id: string) => {
+    const res = await api.patch(`/admin/pasien-belum-terverifikasi/${id}`)
+    return res.data;
+}

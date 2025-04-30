@@ -1,7 +1,11 @@
+import VerificationCardInfo from "@/components/verifikasi/VerificationCardInfo";
+import TableVerification from "@/components/verifikasi/TableVerification";
+
 export default function VerifikasiPage() {
     return (
-        <div>
-            <h1>Halaman Verifikasi</h1>
+        <div className="px-8">
+            <VerificationCardInfo />
+            <TableVerification />
         </div>
     )
 }

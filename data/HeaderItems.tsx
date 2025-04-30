@@ -33,7 +33,7 @@ export const headerItems: HeaderItem[] = [
     },
     {
         title: "Verifikasi Pending",
-        description: "Proses verifikasi data pasien yang menunggu persetujuan admin.",
+        description: "Proses verifikasi data pasien yang menunggu persetujuan api.",
         path: "/verifikasi",
     },
 ]

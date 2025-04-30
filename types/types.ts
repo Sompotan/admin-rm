@@ -11,3 +11,9 @@ export type HeaderItem = {
     description: string;
     path?: string;
 }
+
+export type CardItemProps = {
+    title: string;
+    value: number;
+    icon: React.ReactNode;
+}

@@ -1,6 +1,6 @@
 export interface LoginResponse {
     id: string;
-    role: "admin";
+    role: "api";
     token: string;
     isVerified: "verified";
 }
