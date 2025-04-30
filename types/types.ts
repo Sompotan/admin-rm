@@ -4,5 +4,10 @@ export type NavItem = {
     label: string;
     icon: React.ReactNode;
     path?: string;
-    isActive: boolean;
+}
+
+export type HeaderItem = {
+    title: string;
+    description: string;
+    path?: string;
 }

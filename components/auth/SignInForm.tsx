@@ -24,7 +24,7 @@ export default function SignInForm({ className, ...props }: React.ComponentProps
         })
 
         if(res) {
-            router.push("/")
+            router.push("/dashboard")
         }
 
         setLoading(false);
