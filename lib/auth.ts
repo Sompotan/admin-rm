@@ -9,3 +9,7 @@ export const loginApi = async (email: string, password: string): Promise<LoginRe
     })
     return res.data;
 }
+
+export const logoutApi = async () => {
+    return await api.post("/auth/logout");
+}
