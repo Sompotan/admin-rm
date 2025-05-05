@@ -28,3 +28,23 @@ export type TableKunjunganProps = {
     data: KunjunganData[];
     onCheckIn: (id: string) => void;
 }
+
+
+export type SelectFieldProps = {
+    label: string;
+    placeholder: string;
+    options: {label: string; value: string;}[]
+    selectedValue: string;
+    onChange: (value: string) => void;
+}
+
+export type DatePickerKunjunganProps = {
+    selectedDate: Date | undefined;
+    onChange: (date: Date | undefined) => void;
+    dokterId: string;
+}
+
+export type AlasanKunjunganFieldProps = {
+    value: string;
+    onChange: (value: string) => void;
+}

@@ -35,11 +35,37 @@ export const getAllKunjungan = async (search?: string, status?: string) => {
 }
 
 export const getKunjunganById = async (id: string) => {
-    const res = await api.get(`/kunjungan/${id}`)
+    const res = await api.get(`/admin/kunjungan/${id}`)
     return res.data;
 }
 
 export const checkInKunjungan = async (id: string) => {
     const res = await api.patch(`/admin/kunjungan/${id}/check-in`)
+    return res.data;
+}
+
+export const fetchVerifiedPatient = async () => {
+    const res = await api.get('/admin/pasien')
+    return res.data;
+}
+
+export const fetchDokter = async() => {
+    const res = await api.get("/admin/dokter")
+    return res.data;
+}
+
+export const tambahKunjungan = async(data: {
+    pasienId:  string;
+    tenagaMedisId: string;
+    tanggal_kunjungan: string;
+    alasanKunjungan: string;
+}) => {
+    const res = await api.post("/admin/kunjungan", data)
+    return res.data;
+}
+
+
+export const fetchDokterById = async (id: string) => {
+    const res = await api.get(`/admin/dokter/${id}`)
     return res.data;
 }
