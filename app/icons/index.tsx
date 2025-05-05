@@ -14,6 +14,10 @@ import Today from "./NavigationIcon/today.svg"
 import Clock2 from "./VerificationIcon/clock2.svg"
 import Verify from "./VerificationIcon/verify.svg"
 
+//KunjunganIcon
+import Search from "./KunjunganIcon/search.svg"
+import Add from "./KunjunganIcon/add.svg"
+
 export {
     Chart,
     Clock,
@@ -23,5 +27,7 @@ export {
     Tick,
     Today,
     Clock2,
-    Verify
+    Verify,
+    Search,
+    Add
 }

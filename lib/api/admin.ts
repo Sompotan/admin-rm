@@ -24,3 +24,22 @@ export const verifyPatientById = async (id: string) => {
     const res = await api.patch(`/admin/pasien-belum-terverifikasi/${id}`)
     return res.data;
 }
+
+export const getAllKunjungan = async (search?: string, status?: string) => {
+    const params: Record<string, string> = {}
+    if (search) params.search = search;
+    if (status) params.status = status;
+
+    const res = await api.get("/admin/kunjungan", {params});
+    return res.data;
+}
+
+export const getKunjunganById = async (id: string) => {
+    const res = await api.get(`/kunjungan/${id}`)
+    return res.data;
+}
+
+export const checkInKunjungan = async (id: string) => {
+    const res = await api.patch(`/admin/kunjungan/${id}/check-in`)
+    return res.data;
+}

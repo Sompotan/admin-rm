@@ -3,7 +3,7 @@ import TableVerification from "@/components/verifikasi/TableVerification";
 
 export default function VerifikasiPage() {
     return (
-        <div className="px-8">
+        <div>
             <VerificationCardInfo />
             <TableVerification />
         </div>

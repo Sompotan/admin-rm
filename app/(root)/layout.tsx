@@ -12,7 +12,9 @@ export default function RootLayout({
       <SidebarComponents />
       <SidebarInset>
           <Headers />
-        {children}
+          <div className="px-8">
+              {children}
+          </div>
       </SidebarInset>
     </SidebarProvider>
   );

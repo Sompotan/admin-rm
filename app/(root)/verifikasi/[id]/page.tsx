@@ -5,21 +5,29 @@ import DetailItems from "@/components/verifikasi/DetailItems";
 import {fetchUnverifiedPatientById} from "@/lib/api/admin";
 import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import {PasienDetail} from "@/types/verifikasi/types";
 
 export default function DetailVerifilkasiPage() {
     const params = useParams();
 
-    const [pasien,setPasien] = useState<any>(null);
+    const [pasien,setPasien] = useState<PasienDetail | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
+
         const fetch = async () => {
-            const res = await fetchUnverifiedPatientById(params.id as string)
-            setPasien(res)
+            setLoading(true);
+            try {
+                const res = await fetchUnverifiedPatientById(params.id as string)
+                setPasien(res)
+            } catch (error) {
+                console.error("Gagal mengambil data pasien: ", error)
+            }finally {
+                setLoading(false);
+            }
+
         }
 
-        setLoading(false);
         fetch()
     }, [params]);
 
@@ -45,11 +53,11 @@ export default function DetailVerifilkasiPage() {
                             <div className="flex flex-col items-start gap-4">
                                 <DetailItems
                                     title={"Nama Lengkap"}
-                                    value={pasien?.namaLengkap}
+                                    value={pasien?.namaLengkap ?? "-"}
                                 />
                                 <DetailItems
                                     title={"NIK"}
-                                    value={nik}
+                                    value={nik ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start gap-4">
@@ -61,35 +69,40 @@ export default function DetailVerifilkasiPage() {
                             <div className="flex flex-col items-start gap-4">
                                 <DetailItems
                                     title={"Tanggal Lahir"}
-                                    value={new Date(pasien?.tanggalLahir).toLocaleDateString("id-ID", {
-                                        year: "numeric",
-                                        month: "2-digit",
-                                        day: "2-digit"
-                                    })}
+                                    value={
+                                    pasien?.tanggalLahir
+                                    ? new Date(pasien?.tanggalLahir).toLocaleDateString("id-ID", {
+                                            year: "numeric",
+                                            month: "2-digit",
+                                            day: "2-digit"
+                                        })
+                                    : "-"
+                                }
+
                                 />
                                 <DetailItems
                                     title={"Status Perkawinan"}
-                                    value={pasien?.statusPerkawinan?.namaStatusPerkawinan}
+                                    value={pasien?.statusPerkawinan?.namaStatusPerkawinan ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start gap-4">
                                 <DetailItems
                                     title={"Nomor Handphone"}
-                                    value={pasien?.nomorHandphone}
+                                    value={pasien?.nomorHandphone ?? "-"}
                                 />
                                 <DetailItems
                                     title={"Pendidkan Terkahir"}
-                                    value={pasien?.pendidikan?.namaPendidikan}
+                                    value={pasien?.pendidikan?.namaPendidikan ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start gap-4 mr-10">
                                 <DetailItems
                                     title={"Agama"}
-                                    value={pasien?.agama?.namaAgama}
+                                    value={pasien?.agama?.namaAgama ?? "-"}
                                 />
                                 <DetailItems
                                     title={"Pekerjaan"}
-                                    value={pasien?.pekerjaan}
+                                    value={pasien?.pekerjaan ?? "-"}
                                 />
                             </div>
                         </div>
@@ -104,33 +117,33 @@ export default function DetailVerifilkasiPage() {
                             <div className="flex flex-col items-start gap-4">
                                 <DetailItems
                                     title={"Jalan"}
-                                    value={pasien?.alamat?.jalan}
+                                    value={pasien?.alamat?.jalan ?? "-"}
                                 />
                                 <DetailItems
                                     title={"Kecamatan"}
-                                    value={pasien?.alamat?.kecamatan}
+                                    value={pasien?.alamat?.kecamatan ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start gap-4">
                                 <DetailItems
                                     title={"RT / RW"}
-                                    value={pasien?.alamat?.rtRw}
+                                    value={pasien?.alamat?.rtRw ?? "-"}
                                 />
                                 <DetailItems
                                     title={"Kabupaten / Kota"}
-                                    value={pasien?.alamat?.kabupatenKota}
+                                    value={pasien?.alamat?.kabupatenKota ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start">
                                 <DetailItems
                                     title={"Lingkungan"}
-                                    value={pasien?.alamat?.lingkungan}
+                                    value={pasien?.alamat?.lingkungan ?? "-"}
                                 />
                             </div>
                             <div className="flex flex-col items-start mr-10">
                                 <DetailItems
                                     title={"Kelurahan / Desa"}
-                                    value={pasien?.alamat?.kelurahanDesa}
+                                    value={pasien?.alamat?.kelurahanDesa ?? "-"}
                                 />
                             </div>
                         </div>
@@ -144,11 +157,11 @@ export default function DetailVerifilkasiPage() {
                         <div className="flex flex-row items-start gap-20">
                             <DetailItems
                                 title={"Status Pembiayaan"}
-                                value={pasien?.statusPembiayaan?.namaStatusPembiayaan}
+                                value={pasien?.statusPembiayaan?.namaStatusPembiayaan ?? "-"}
                             />
                             <DetailItems
                                 title={"Nomor BPJS"}
-                                value={bpjs}
+                                value={bpjs ?? "-"}
                             />
                         </div>
                     </CardContent>
