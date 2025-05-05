@@ -26,7 +26,7 @@ export const navItems: NavItem[] = [
     {
         label: "Dokter",
         icon: <Doctor/>,
-        path: "/antrian",
+        path: "/dokter",
     },
     {
         label: "Obat",

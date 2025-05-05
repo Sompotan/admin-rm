@@ -1,5 +1,5 @@
 import {Badge} from "@/components/ui/badge";
-import {kunjunganStatusOption} from "@/data/KunjunganStatus";
+import {kunjunganStatusOption} from "@/data/StatusMapping";
 
 export type KunjunganStatusValue = typeof kunjunganStatusOption[number]["value"]
 

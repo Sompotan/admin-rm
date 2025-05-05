@@ -69,3 +69,8 @@ export const fetchDokterById = async (id: string) => {
     const res = await api.get(`/admin/dokter/${id}`)
     return res.data;
 }
+
+export const fetchSummaryAntrian = async () => {
+    const res = await api.get('/admin/antrian-stats')
+    return res.data;
+}

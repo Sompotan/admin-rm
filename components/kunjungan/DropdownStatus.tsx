@@ -1,5 +1,5 @@
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {kunjunganStatusOption} from "@/data/KunjunganStatus";
+import {kunjunganStatusOption} from "@/data/StatusMapping";
 import {DropdownStatusProps} from "@/types/kunjungan";
 
 

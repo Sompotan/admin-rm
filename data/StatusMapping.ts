@@ -20,3 +20,18 @@ export const kunjunganStatusOption = [
         value: "Selesai"
     },
 ] as const;
+
+export const AntrianStatusOption = [
+    {
+        label: "Menunggu",
+        value: "Diproses"
+    },
+    {
+        label: "Dalam Pemeriksaan",
+        value: "DalamPemeriksaan"
+    },
+    {
+        label: "Selesai",
+        value: "Selesai"
+    },
+] as const;
