@@ -1,0 +1,46 @@
+"use client";
+
+import SearchField from "@/components/pasien/SearchField";
+import PasienTable, {PasienData} from "@/components/pasien/PasienTable";
+import {useEffect, useState} from "react";
+import {fetchVerifiedPatient} from "@/lib/api/admin";
+
+export default function PasienPage() {
+    const [data, setData] = useState<PasienData[]>([])
+    const [searchTerm, setSearchTerm] = useState("")
+
+    const fetchData = async () => {
+        try {
+            const res = await fetchVerifiedPatient()
+            const mappedData: PasienData[] = res.map((p: PasienData) => ({
+                id: p.id,
+                namaLengkap: p.namaLengkap,
+                medicalRecordNumber: p.medicalRecordNumber,
+                gender: p.gender === "Pria" ? "Laki - Laki" : "Perempuan",
+                status: p.medicalRecordNumber ? "Aktif" : "Tidak Aktif"
+            }))
+
+            setData(mappedData);
+        } catch (error) {
+            console.error("Gagal mengambil data pasien", error)
+        }
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    const filteredData = data.filter((pasien) =>
+        pasien.namaLengkap.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    return (
+        <div className="bg-white p-4">
+            <SearchField value={searchTerm} onChange={setSearchTerm}/>
+            <div className="mt-8">
+                <PasienTable data={filteredData} />
+            </div>
+
+        </div>
+    )
+}

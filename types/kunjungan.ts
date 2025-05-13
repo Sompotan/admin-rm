@@ -21,7 +21,7 @@ export type KunjunganData = {
     nama_dokter: string;
     tanggal_kunjungan: string;
     status: string;
-    checkInAt: string | null;
+    checkInAt?: string | null;
 }
 
 export type TableKunjunganProps = {
@@ -33,9 +33,9 @@ export type TableKunjunganProps = {
 export type SelectFieldProps = {
     label: string;
     placeholder: string;
-    options: {label: string; value: string;}[]
-    selectedValue: string;
-    onChange: (value: string) => void;
+    options?: {label: string; value: string;}[]
+    selectedValue?: string;
+    onChange?: (value: string) => void;
 }
 
 export type DatePickerKunjunganProps = {

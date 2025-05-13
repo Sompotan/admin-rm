@@ -18,6 +18,8 @@ import Verify from "./VerificationIcon/verify.svg"
 import Search from "./KunjunganIcon/search.svg"
 import Add from "./KunjunganIcon/add.svg"
 
+//PasienIcon
+import AddUserMale from "./PasienIcon/add-user-male.svg"
 
 export {
     Chart,
@@ -30,5 +32,6 @@ export {
     Clock2,
     Verify,
     Search,
-    Add
+    Add,
+    AddUserMale
 }

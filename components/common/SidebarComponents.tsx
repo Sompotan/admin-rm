@@ -17,23 +17,24 @@ export default function SidebarComponents({ ...props }: React.ComponentProps<typ
         <div className="m-2"></div>
         <SidebarContent>
           <SidebarMenu>
-            {navItems.map((item) => {
-                if (item.path != null) {
-                    const isActive = pathname.startsWith(item.path);
-                    return (
-                        <SidebarMenuItem key={item.label} className="px-4 ">
-                            <SidebarMenuButton asChild isActive={isActive} className="hover:bg-sidebar-accent">
-                                <a href={item.path} className="h-auto p-4">
-                                    <div className="flex flex-row items-center justify-center gap-2 ">
-                                        <div>{item.icon}</div>
-                                        <p>{item.label}</p>
-                                    </div>
-                                </a>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    );
-                }
-            })}
+              {navItems.map((item) => {
+                  if (item.path != null) {
+                      const isActive = item.path === "/" ? pathname === "/" : pathname.startsWith(item.path);
+                      return (
+                          <SidebarMenuItem key={item.label} className="px-4 ">
+                              <SidebarMenuButton asChild isActive={isActive} className="hover:bg-sidebar-accent">
+                                  <a href={item.path} className="h-auto p-4">
+                                      <div className="flex flex-row items-center justify-center gap-2 ">
+                                          <div>{item.icon}</div>
+                                          <p>{item.label}</p>
+                                      </div>
+                                  </a>
+                              </SidebarMenuButton>
+                          </SidebarMenuItem>
+                      );
+                  }
+              })}
+
           </SidebarMenu>
         </SidebarContent>
 

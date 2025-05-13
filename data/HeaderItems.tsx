@@ -4,7 +4,7 @@ export const headerItems: HeaderItem[] = [
     {
         title: "Dashboard Overview",
         description: "Pantau data klinik dan aktivitas pasien secara real-time.",
-        path: "/dashboard",
+        path: "/",
     },
     {
         title: "Pasien",
@@ -35,5 +35,10 @@ export const headerItems: HeaderItem[] = [
         title: "Verifikasi Pending",
         description: "Proses verifikasi data pasien yang menunggu persetujuan api.",
         path: "/verifikasi",
+    },
+    {
+        title: "Rekam Medis",
+        description: "Rekam Medis Pasien",
+        path: "/rekam-medis",
     },
 ]

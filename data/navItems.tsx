@@ -6,7 +6,7 @@ export const navItems: NavItem[] = [
     {
         label: "Dashboard",
         icon: <Chart />,
-        path: "/dashboard",
+        path: "/",
     },
     {
         label: "Pasien",
@@ -38,5 +38,4 @@ export const navItems: NavItem[] = [
         icon: <Tick/>,
         path: "/verifikasi",
     }
-    
 ]
