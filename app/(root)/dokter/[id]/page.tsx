@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileDoctorCard, {ProfileDoctorCardProps} from "@/components/dokter/DetailDokter/ProfileDoctorCard";
+import ProfileDoctorCard from "@/components/dokter/DetailDokter/ProfileDoctorCard";
 import {useEffect, useState} from "react";
 import {fetchDokterById} from "@/lib/api/admin";
 import {useParams} from "next/navigation";
