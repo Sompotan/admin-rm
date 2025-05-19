@@ -1,6 +1,5 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import BadgeStatus, {BadgeStatusProps} from "@/components/kunjungan/BadgeStatus";
-import ButtonCheckIn from "@/components/kunjungan/ButtonCheckIn";
 import {KunjunganData} from "@/types/kunjungan";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 

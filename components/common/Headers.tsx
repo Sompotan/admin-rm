@@ -43,6 +43,8 @@ export default function Headers() {
         setLoading(false);
     };
 
+    if (loading) return;
+
     return (
         <div className="w-full h-auto flex flex-row justify-between p-8">
             <div className="flex flex-row items-center gap-3">

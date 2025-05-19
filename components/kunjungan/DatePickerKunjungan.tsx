@@ -1,9 +1,8 @@
 import {DatePickerKunjunganProps} from "@/types/kunjungan";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
 import {format} from "date-fns";
-import {id} from "date-fns/locale";
 import { Calendar } from "../ui/calendar";
 import {fetchDokterById} from "@/lib/api/admin";
 

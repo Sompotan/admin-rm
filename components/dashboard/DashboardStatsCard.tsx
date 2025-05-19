@@ -11,8 +11,6 @@ export type DashboardStatsCardProps = {
 }
 
 export default function DashboardStatsCard({title, logo, value, total, deskripsi, forceShowTotal} : DashboardStatsCardProps) {
-    const displayTotal = total ?? 0;
-
     return (
         <Card className="w-full shadow shadow-gray-300">
             <CardHeader>

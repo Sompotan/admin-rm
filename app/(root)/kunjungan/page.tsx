@@ -47,6 +47,8 @@ export default function KunjunganPage() {
         }
     }
 
+    if (loading) return <div>Loading...</div>
+
 
     return (
         <div className="flex flex-col gap-10">

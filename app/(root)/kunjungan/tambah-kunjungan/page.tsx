@@ -12,7 +12,6 @@ import {toast} from "sonner";
 
 export default function TambahKunjunganPage(){
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
     const [pasienOptions, setPasienOptions] = useState([])
     const [dokterOptions, setDokterOptions] = useState([])
     const [selectedPasien, setSelectedPasien] = useState("")
@@ -52,8 +51,6 @@ export default function TambahKunjunganPage(){
             return;
         }
 
-
-        setLoading(true)
         try {
             await tambahKunjungan({
                 pasienId: selectedPasien,
@@ -65,8 +62,6 @@ export default function TambahKunjunganPage(){
         } catch (error) {
             console.error("Gagal menambah kunjungan:", error);
             alert("Gagal menambahkan kunjungan");
-        } finally {
-            setLoading(false)
         }
     }
 
