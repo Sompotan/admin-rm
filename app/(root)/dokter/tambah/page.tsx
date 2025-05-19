@@ -3,7 +3,7 @@
 import InputField from "@/components/pasien/InputField";
 import SelectField from "@/components/kunjungan/SelectField";
 import {Button} from "@/components/ui/button";
-import {DatePickerField} from "@/components/pasien/DatePickerField";
+import DatePickerField from "@/components/pasien/DatePickerField";
 import CheckboxGroupField from "@/components/common/CheckboxGroupField";
 import {useEffect, useState} from "react";
 import {CreateDoctorPayload} from "@/types/admin";
@@ -14,7 +14,7 @@ import {DoctorFormErrors, validateForm} from "@/lib/validateTambahDokter";
 
 
 
-export default function TambahDokterPage() {
+export default function Page() {
     const router = useRouter()
 
     const [errors, setErrors] = useState<DoctorFormErrors>({});
