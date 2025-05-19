@@ -18,7 +18,7 @@ type DatePickerFieldProps = {
     label: string;
 }
 
-export function DatePickerField({selectedDate, onChange, label} : DatePickerFieldProps) {
+export default function DatePickerField({selectedDate, onChange, label} : DatePickerFieldProps) {
 
 
     return (

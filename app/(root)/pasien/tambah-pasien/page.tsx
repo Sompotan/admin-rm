@@ -2,7 +2,7 @@
 
 import InputField from "@/components/pasien/InputField";
 import {useEffect, useState} from "react";
-import {DatePickerField} from "@/components/pasien/DatePickerField";
+import DatePickerField from "@/components/pasien/DatePickerField";
 import SelectField from "@/components/kunjungan/SelectField";
 import { Label } from "@/components/ui/label";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
