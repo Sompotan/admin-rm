@@ -50,6 +50,19 @@ export default function TambahPasienPage() {
     const [kecamatan, setKecamatan] = useState("");
     const [kabupaten, setKabupaten] = useState("");
     const [pekerjaan, setPekerjaan] = useState("");
+    const [nikError, setNikError] = useState<string>("");
+
+    const validateNik = (value: string) => {
+        if (!value) {
+            setNikError("NIK wajib diisi");
+        } else if (!/^\d{16}$/.test(value)) {
+            setNikError("NIK harus 16 digit angka");
+        } else {
+            setNikError("");
+        }
+    };
+
+
 
     useEffect(() => {
         const fetchOptions = async () => {
@@ -158,7 +171,11 @@ export default function TambahPasienPage() {
                         label="Nomor Induk Kependudukan (NIK)"
                         placeholder="Masukkan NIK anda"
                         value={nik}
-                        onChange={setNik}
+                        onChange={(val) => {
+                            setNik(val);
+                            validateNik(val);
+                        }}
+                        error={nikError}
                     />
                     <InputField
                         id="nama"
@@ -168,7 +185,7 @@ export default function TambahPasienPage() {
                         value={nama}
                         onChange={setNama}
                     />
-                    <DatePickerField selectedDate={date} onChange={setDate} />
+                    <DatePickerField selectedDate={date} onChange={setDate} label="Tanggal Lahir"/>
                     <InputField
                         id="nomor"
                         type="text"

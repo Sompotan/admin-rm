@@ -9,11 +9,17 @@ import {useEffect, useState} from "react";
 import {CreateDoctorPayload} from "@/types/admin";
 import {createDoctor, fetchJenisKualifikasi} from "@/lib/api/admin";
 import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {DoctorFormErrors, validateForm} from "@/lib/validateTambahDokter";
 
 
 
 export default function TambahDokterPage() {
     const router = useRouter()
+
+    const [errors, setErrors] = useState<DoctorFormErrors>({});
+
+
     const [jenisKualifikasiOptions, setJenisKualifikasiOptions] = useState<{ label: string; value: string }[]>([]);
     const [form, setForm] = useState<CreateDoctorPayload>({
         email: "",
@@ -63,59 +69,33 @@ export default function TambahDokterPage() {
     }, []);
 
     const handleSubmit = async () => {
-        // (Opsional) Validasi sederhana
-        if (!form.email || !form.password || !form.nik || !form.kualifikasi.id_jenis_kualifikasi) {
-            alert("Mohon lengkapi semua data wajib");
+        const validationErrors: DoctorFormErrors = validateForm(form);
+        setErrors(validationErrors);
+
+        const hasErrors = Object.keys(validationErrors).length > 0 ||
+            (validationErrors.nama && Object.keys(validationErrors.nama).length > 0) ||
+            (validationErrors.alamat && Object.keys(validationErrors.alamat).length > 0) ||
+            (validationErrors.kualifikasi && Object.keys(validationErrors.kualifikasi).length > 0);
+
+        if (hasErrors) {
+            toast.error("Mohon lengkapi semua data wajib.");
             return;
         }
 
         const payload: CreateDoctorPayload = {
-            email: form.email,
-            password: form.password,
-            nik: form.nik,
-            gender: form.gender,
-            tanggal_lahir: form.tanggal_lahir,
-            nomor_handphone: form.nomor_handphone,
-            jadwalPraktekHari: form.jadwalPraktekHari,
-            status: form.status,
-            nama: {
-                prefix: form.nama.prefix,
-                nama_depan: form.nama.nama_depan,
-                nama_tengah: form.nama.nama_tengah,
-                nama_belakang: form.nama.nama_belakang,
-                suffix: form.nama.suffix,
-            },
-
-            alamat: {
-                jalan: form.alamat.jalan,
-                rt_rw: form.alamat.rt_rw,
-                lingkungan: form.alamat.lingkungan,
-                kelurahan_desa: form.alamat.kelurahan_desa,
-                kecamatan: form.alamat.kecamatan,
-                kabupaten_kota: form.alamat.kabupaten_kota,
-            },
-
-            kualifikasi: {
-                id_jenis_kualifikasi: form.kualifikasi.id_jenis_kualifikasi,
-                nomor_kualifikasi: form.kualifikasi.nomor_kualifikasi,
-                tanggal_mulai: form.kualifikasi.tanggal_mulai,
-                tanggal_berakhir: form.kualifikasi.tanggal_berakhir,
-                institusi_penerbit: form.kualifikasi.institusi_penerbit,
-            },
+            ...form,
+            nama: { ...form.nama },
+            alamat: { ...form.alamat },
+            kualifikasi: { ...form.kualifikasi }
         };
 
         try {
-            const result = await createDoctor(payload);
-            router.back()
-            alert("Dokter berhasil ditambahkan ✅");
-            console.log("Hasil:", result);
-
-            // (Opsional) Reset form:
-            // setForm({ ...kosongkan state });
-
+            await createDoctor(payload);
+            toast.success("Dokter berhasil ditambahkan ✅");
+            router.back();
         } catch (error) {
             console.error("[ERROR createDoctor]", error);
-            alert("Gagal menambahkan dokter ❌");
+            toast.error("Gagal menambahkan dokter ❌");
         }
     };
 
@@ -126,19 +106,19 @@ export default function TambahDokterPage() {
             <div className="flex flex-col gap-4 mb-8">
                 <p className='text-2xl font-semibold'>Akun</p>
                 <div className="flex flex-row gap-4">
-                    <InputField id="email" type="email" label="Email" placeholder="user@example.com"
+                    <InputField error={errors.email} id="email" type="email" label="Email" placeholder="user@example.com"
                                 value={form.email} onChange={(v) => setForm(f => ({...f, email: v}))}/>
-                    <InputField id="password" type="password" label="Password" placeholder="********"
+                    <InputField error={errors.password} id="password" type="password" label="Password" placeholder="********"
                                 value={form.password} onChange={(v) => setForm(f => ({ ...f, password: v }))}/>
                 </div>
             </div>
             <div className="flex flex-col gap-4 mb-8">
                 <p className='text-2xl font-semibold'>Identitas Diri</p>
                 <div className="flex flex-col gap-4">
-                    <InputField id="nik" type="text" label="Nomor Induk Kependudukan (NIK)" placeholder="Masukkan nomor induk kependudukan anda"
+                    <InputField error={errors.nik} id="nik" type="text" label="Nomor Induk Kependudukan (NIK)" placeholder="Masukkan nomor induk kependudukan anda"
                                 value={form.nik} onChange={(v) => setForm(f => ({ ...f, nik: v }))} />
                     <div className="flex flex-row items-center justify-between gap-5">
-                        <InputField id="prefix" type="text" label="Prefix" placeholder="dr."
+                        <InputField error={errors.nama?.prefix} id="prefix" type="text" label="Prefix" placeholder="dr."
                                     value={form.nama.prefix} onChange={(v) =>
                             setForm((f) => ({
                                 ...f,
@@ -148,7 +128,7 @@ export default function TambahDokterPage() {
                                 }
                             }))
                         } />
-                        <InputField id="nama_depan" type="text" label="Nama Depan" placeholder="Nama Depan"
+                        <InputField error={errors.nama?.nama_depan} id="nama_depan" type="text" label="Nama Depan" placeholder="Nama Depan"
                                     value={form.nama.nama_depan} onChange={(v) =>
                             setForm((f) => ({
                                 ...f,
@@ -158,7 +138,7 @@ export default function TambahDokterPage() {
                                 }
                             }))
                         } />
-                        <InputField id="nama_tengah" type="text" label="Nama Tengah" placeholder="Nama Tengah"
+                        <InputField error={errors.nama?.nama_tengah} id="nama_tengah" type="text" label="Nama Tengah" placeholder="Nama Tengah"
                                     value={form.nama.nama_tengah} onChange={(v) =>
                             setForm((f) => ({
                                 ...f,
@@ -168,7 +148,7 @@ export default function TambahDokterPage() {
                                 }
                             }))
                         } />
-                        <InputField id="nama_belakang" type="text" label="Nama Belakang" placeholder="Nama Belakang"
+                        <InputField error={errors.nama?.nama_belakang} id="nama_belakang" type="text" label="Nama Belakang" placeholder="Nama Belakang"
                                     value={form.nama.nama_belakang} onChange={(v) =>
                             setForm((f) => ({
                                 ...f,
@@ -178,7 +158,7 @@ export default function TambahDokterPage() {
                                 }
                             }))
                         } />
-                        <InputField id="suffix" type="text" label="Suffix" placeholder="Gelar"
+                        <InputField error={errors.nama?.suffix} id="suffix" type="text" label="Suffix" placeholder="Gelar"
                                     value={form.nama.suffix} onChange={(v) =>
                             setForm((f) => ({
                                 ...f,
@@ -189,8 +169,8 @@ export default function TambahDokterPage() {
                             }))
                         } />
                     </div>
-                    <DatePickerField selectedDate={form.tanggal_lahir} onChange={(v) => setForm(f => ({...f, tanggal_lahir: v}))} />
-                    <InputField id="nomor_handphone" type="text" label="Nomor Handphone" placeholder="08xxxxxxxxx" value={form.nomor_handphone} onChange={(v) => setForm(f => ({...f, nomor_handphone: v}))} />
+                    <DatePickerField selectedDate={form.tanggal_lahir} onChange={(v) => setForm(f => ({...f, tanggal_lahir: v}))} label="Tanggal Lahir"/>
+                    <InputField error={errors.nomor_handphone} id="nomor_handphone" type="text" label="Nomor Handphone" placeholder="08xxxxxxxxx" value={form.nomor_handphone} onChange={(v) => setForm(f => ({...f, nomor_handphone: v}))} />
                     <div className="flex flex-row items-center justify-between gap-5">
                         <SelectField label="Jenis Kelamin" placeholder="Pilih Jenis Kelamin" selectedValue={form.gender} options={[{ label: "Laki - Laki", value: "Pria"}, {label:"Perempuan", value: "Wanita"}]} onChange={(v) => setForm(f => ({...f, gender: v}))} />
                         <SelectField label="Status" placeholder="Pilih Status" selectedValue={form.status} onChange={(v) => setForm(f => ({...f, status: v}))} options={[{ label: "Aktif", value: "AKTIF" }, { label: "Nonaktif", value: "NONAKTIF" }]} />
@@ -278,7 +258,7 @@ export default function TambahDokterPage() {
                                      }
                                  }))
                              } />
-                <InputField id="nomor_kualifikasi" type="text" label="Nomor Kualifikasi" placeholder="Masukkan nomor kualifikasi"
+                <InputField error={errors.kualifikasi?.nomor_kualifikasi} id="nomor_kualifikasi" type="text" label="Nomor Kualifikasi" placeholder="Masukkan nomor kualifikasi"
                             value={form.kualifikasi.nomor_kualifikasi} onChange={(v) =>
                     setForm((f) => ({
                         ...f,
@@ -298,7 +278,9 @@ export default function TambahDokterPage() {
                                                  tanggal_mulai: v
                                              }
                                          }))
-                                     }  />
+                                     }
+                                     label="Tanggal Mulai"
+                    />
                     <DatePickerField selectedDate={form.kualifikasi.tanggal_berakhir}
                                      onChange={(v) =>
                                          setForm((f) => ({
@@ -308,7 +290,9 @@ export default function TambahDokterPage() {
                                                  tanggal_berakhir: v
                                              }
                                          }))
-                                     } />
+                                     }
+                                     label="Tanggal Berakhir"
+                    />
                 </div>
                 <InputField id="institusi" type="text" label="Institusi Penerbit" placeholder="Masukkan institusi penerbit"
                             value={form.kualifikasi.institusi_penerbit} onChange={(v) =>

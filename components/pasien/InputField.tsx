@@ -8,12 +8,13 @@ type InputFieldProps = {
     placeholder: string;
     value: string;
     onChange: (val: string) => void;
+    error?: string;
 }
 
-export default function InputField({type, label, id, placeholder, onChange, value} : InputFieldProps) {
+export default function InputField({type, label, id, placeholder, onChange, value, error} : InputFieldProps) {
     return (
         <div className="w-full flex flex-col gap-2">
-            <Label htmlFor={id} className="text-sm">{label}</Label>
+            <Label htmlFor={id} className="text-sm">{label} <span className="text-red-500">*</span></Label>
             <Input
                 type={type}
                 id={id}
@@ -21,6 +22,7 @@ export default function InputField({type, label, id, placeholder, onChange, valu
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             />
+            {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
 
     )

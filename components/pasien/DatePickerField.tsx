@@ -15,14 +15,15 @@ import {
 type DatePickerFieldProps = {
     selectedDate: Date | null,
     onChange: (date: Date) => void,
+    label: string;
 }
 
-export function DatePickerField({selectedDate, onChange} : DatePickerFieldProps) {
+export function DatePickerField({selectedDate, onChange, label} : DatePickerFieldProps) {
 
 
     return (
         <div className="w-full flex flex-col gap-2">
-            <p className="text-sm font-medium">Tanggal Lahir</p>
+            <p className="text-sm font-medium">{label} <span className="text-red-500">*</span></p>
             <Popover>
                 <PopoverTrigger asChild>
                     <Button

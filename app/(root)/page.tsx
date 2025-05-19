@@ -1,7 +1,6 @@
 "use client";
 
 import React, {useEffect, useState} from 'react'
-import {handleLogout} from "@/lib/handlers/handleLogout";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import DashboardStatsCard from "@/components/dashboard/DashboardStatsCard";
@@ -11,7 +10,6 @@ import { People } from '@/app/icons';
 import {fetchDashboardOverview} from "@/lib/api/admin";
 
 const Home = () => {
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const [overview, setOverview] = useState<{

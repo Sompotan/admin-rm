@@ -1,6 +1,7 @@
 import SidebarComponents from "@/components/common/SidebarComponents";
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import Headers from "@/components/common/Headers";
+import {Toaster} from "sonner";
 
 export default function RootLayout({
   children,
@@ -14,6 +15,7 @@ export default function RootLayout({
           <Headers />
           <div className="px-8 root">
               {children}
+              <Toaster richColors position="top-right" />
           </div>
       </SidebarInset>
     </SidebarProvider>

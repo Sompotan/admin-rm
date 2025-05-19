@@ -25,7 +25,7 @@ export default function CheckboxGroupField({
     return (
         <div className="flex flex-col gap-2">
             <div className="font-medium" id={label}>
-                {label}
+                {label} <span className="text-red-500">*</span>
             </div>
 
             <CheckboxGroup

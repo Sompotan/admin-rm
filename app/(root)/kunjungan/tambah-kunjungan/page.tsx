@@ -8,6 +8,7 @@ import SelectField from "@/components/kunjungan/SelectField";
 import DatePickerKunjungan from "@/components/kunjungan/DatePickerKunjungan";
 import AlasanKunjunganField from "@/components/kunjungan/AlasanKunjunganField";
 import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
 
 export default function TambahKunjunganPage(){
     const router = useRouter();
@@ -47,7 +48,8 @@ export default function TambahKunjunganPage(){
 
     const handleSubmit = async() => {
         if (!selectedPasien || !selectedDokter || !selectedDate || !alasan) {
-            alert("Semua field wajib diisi")
+            toast.error("Semua field wajib diisi")
+            return;
         }
 
 
