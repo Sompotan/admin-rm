@@ -10,7 +10,7 @@ export default function SelectField({label, placeholder, options, selectedValue,
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent>
-                    {options.map((item) => (
+                    {options?.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                             {item.label}
                         </SelectItem>
