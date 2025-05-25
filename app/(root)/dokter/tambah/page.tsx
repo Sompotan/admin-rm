@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {DoctorFormErrors, validateForm} from "@/lib/validateTambahDokter";
 
-
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
     const router = useRouter()

@@ -1,9 +1,8 @@
 "use client";
 
-import InputField from "@/components/pasien/InputField";
+import dynamic from 'next/dynamic';
 import {useEffect, useState} from "react";
-import DatePickerField from "@/components/pasien/DatePickerField";
-import SelectField from "@/components/kunjungan/SelectField";
+import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Button} from "@/components/ui/button";
@@ -15,11 +14,44 @@ import {
     fetchStatusPerkawinanOptions
 } from "@/lib/api/admin";
 import {useRouter} from "next/navigation";
+import { Options } from "@/types/types";
+
+// Dynamic imports for form components
+const InputField = dynamic(() => import("@/components/pasien/InputField"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full flex flex-col gap-2">
+            <div className="text-sm font-medium">Loading...</div>
+            <div className="h-9 w-full rounded-md border border-input bg-transparent"></div>
+        </div>
+    )
+});
+
+const DatePickerField = dynamic(() => import("@/components/pasien/DatePickerField"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full flex flex-col gap-2">
+            <div className="text-sm font-medium">Loading...</div>
+            <div className="h-9 w-full rounded-md border border-input bg-transparent"></div>
+        </div>
+    )
+});
+
+const SelectField = dynamic(() => import("@/components/kunjungan/SelectField"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full flex flex-col gap-2">
+            <div className="text-sm font-medium">Loading...</div>
+            <div className="h-9 w-full rounded-md border border-input bg-transparent"></div>
+        </div>
+    )
+});
 
 type JenisIdentifier = {
     id: string;
     namaJenisIdentifier: string;
 };
+
 
 export default function TambahPasienPage() {
     const router = useRouter();
@@ -33,12 +65,14 @@ export default function TambahPasienPage() {
         { label: "Perempuan", value: "Wanita" },
     ]
     const [agama, setAgama] = useState("");
-    const [optionsAgama, setOptionsAgama] = useState([]);
+    const [optionsAgama, setOptionsAgama] = useState<Options[]>([]);
     const [pendidikan, setPendidikan] = useState("");
-    const [optionsPendidikan, setOptionsPendidikan] = useState([]);
+    const [optionsPendidikan, setOptionsPendidikan] = useState<Options[]>([]);
     const [statusPerkawinan, setStatusPerkawinan] = useState("");
-    const [optionsStatusPerkawinan, setOptionsStatusPerkawinan] = useState([]);
+    const [optionsStatusPerkawinan, setOptionsStatusPerkawinan] = useState<Options[]>([]);
     const [statusPembiayaan, setStatusPembiayaan] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadingError, setLoadingError] = useState<string | null>(null);
     const [idBpjs, setIdBpjs] = useState<string>("");
     const [idUmum, setIdUmum] = useState<string>("");
     const [bpjs, setBpjs] = useState("");
@@ -66,18 +100,27 @@ export default function TambahPasienPage() {
 
     useEffect(() => {
         const fetchOptions = async () => {
+            setIsLoading(true);
+            setLoadingError(null);
             try {
                 const [agamaRes, pendidikanRes, statusPerkawinanRes, statusPembiayaanRes, jenisIdentifierRes] = await Promise.all([
-                    await fetchAgamaOptions(),
-                    await fetchPendidikanOptions(),
-                    await fetchStatusPerkawinanOptions(),
-                    await fetchStatusPembiayaanOptions(),
-                    await fetchJenisIdentifiers()
+                    fetchAgamaOptions(),
+                    fetchPendidikanOptions(),
+                    fetchStatusPerkawinanOptions(),
+                    fetchStatusPembiayaanOptions(),
+                    fetchJenisIdentifiers()
                 ]);
 
-                setOptionsAgama(agamaRes.map((a: { namaAgama: any; id: any; }) => ({ label: a.namaAgama, value: a.id })));
-                setOptionsPendidikan(pendidikanRes.map((p: { namaPendidikan: any; id: any; }) => ({ label: p.namaPendidikan, value: p.id })));
-                setOptionsStatusPerkawinan(statusPerkawinanRes.map((s: { namaStatusPerkawinan: any; id: any; }) => ({ label: s.namaStatusPerkawinan, value: s.id })));
+                // Check if responses are valid
+                if (!Array.isArray(agamaRes) || !Array.isArray(pendidikanRes) || 
+                    !Array.isArray(statusPerkawinanRes) || !Array.isArray(statusPembiayaanRes) || 
+                    !Array.isArray(jenisIdentifierRes)) {
+                    throw new Error("Invalid response format from API");
+                }
+
+                setOptionsAgama(agamaRes.map((a: { namaAgama: string; id: string; }) => ({ label: a.namaAgama, value: a.id })));
+                setOptionsPendidikan(pendidikanRes.map((p: { namaPendidikan: string; id: string; }) => ({ label: p.namaPendidikan, value: p.id })));
+                setOptionsStatusPerkawinan(statusPerkawinanRes.map((s: { namaStatusPerkawinan: string; id: string; }) => ({ label: s.namaStatusPerkawinan, value: s.id })));
 
 
                 const bpjs = statusPembiayaanRes.find((s: { namaStatusPembiayaan: string; }) => s.namaStatusPembiayaan.toUpperCase() === "BPJS");
@@ -86,9 +129,12 @@ export default function TambahPasienPage() {
                 if (bpjs) setIdBpjs(bpjs.id);
                 if (umum) setIdUmum(umum.id);
 
-                setJenisIdentifiers(jenisIdentifierRes)
+                setJenisIdentifiers(jenisIdentifierRes);
+                setIsLoading(false);
             } catch (error) {
                 console.error("Gagal mengambil data opsi", error);
+                setLoadingError("Gagal memuat data. Silakan muat ulang halaman atau hubungi administrator.");
+                setIsLoading(false);
             }
         };
 
@@ -160,6 +206,29 @@ export default function TambahPasienPage() {
         }
     }
 
+    if (isLoading) {
+        return (
+            <div className="w-full h-[70vh] flex flex-col items-center justify-center">
+                <Loader2 className="h-12 w-12 animate-spin text-gray-400 mb-4" />
+                <p className="text-xl text-gray-600">Memuat data...</p>
+            </div>
+        );
+    }
+
+    if (loadingError) {
+        return (
+            <div className="w-full h-[70vh] flex flex-col items-center justify-center">
+                <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                    <span className="font-medium">Error:</span> {loadingError}
+                </div>
+                <Button onClick={() => window.location.reload()} className="mt-4">
+                    Muat Ulang
+                </Button>
+            </div>
+        );
+    }
+    
+    // Only render the form when all data is loaded
     return (
         <div className="w-full pb-8">
             <div className="flex flex-col gap-4 mb-8">
@@ -203,34 +272,42 @@ export default function TambahPasienPage() {
                         onChange={setPekerjaan}
                     />
                     <div className="flex flex-row items-center justify-between gap-5">
-                        <SelectField
-                            label="Jenis Kelamin"
-                            placeholder="Pilih jenis kelamin"
-                            options={optionsGender}
-                            selectedValue={jenisKelamin}
-                            onChange={setJenisKelamin}
-                        />
-                        <SelectField
-                            label="Agama"
-                            placeholder="Pilih Agama"
-                            options={optionsAgama}
-                            selectedValue={agama}
-                            onChange={setAgama}
-                        />
-                        <SelectField
-                            label="Pendidikan Terakhir"
-                            placeholder="Pilih pendidikan terakhir anda"
-                            options={optionsPendidikan}
-                            selectedValue={pendidikan}
-                            onChange={setPendidikan}
-                        />
-                        <SelectField
-                            label="Status Perkawinan"
-                            placeholder="Pilih status perkawinan anda"
-                            options={optionsStatusPerkawinan}
-                            selectedValue={statusPerkawinan}
-                            onChange={setStatusPerkawinan}
-                        />
+                        {optionsGender && (
+                            <SelectField
+                                label="Jenis Kelamin"
+                                placeholder="Pilih jenis kelamin"
+                                options={optionsGender}
+                                selectedValue={jenisKelamin}
+                                onChange={setJenisKelamin}
+                            />
+                        )}
+                        {optionsAgama && optionsAgama.length > 0 && (
+                            <SelectField
+                                label="Agama"
+                                placeholder="Pilih Agama"
+                                options={optionsAgama}
+                                selectedValue={agama}
+                                onChange={setAgama}
+                            />
+                        )}
+                        {optionsPendidikan && optionsPendidikan.length > 0 && (
+                            <SelectField
+                                label="Pendidikan Terakhir"
+                                placeholder="Pilih pendidikan terakhir anda"
+                                options={optionsPendidikan}
+                                selectedValue={pendidikan}
+                                onChange={setPendidikan}
+                            />
+                        )}
+                        {optionsStatusPerkawinan && optionsStatusPerkawinan.length > 0 && (
+                            <SelectField
+                                label="Status Perkawinan"
+                                placeholder="Pilih status perkawinan anda"
+                                options={optionsStatusPerkawinan}
+                                selectedValue={statusPerkawinan}
+                                onChange={setStatusPerkawinan}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -292,20 +369,23 @@ export default function TambahPasienPage() {
             <div className="flex flex-col gap-4 mb-8">
                 <p className='text-2xl font-semibold'>Status Pembiayaan</p>
                 <div className="flex flex-col gap-4">
-                    <RadioGroup
-                        className="flex flex-row items-center gap-10"
-                        value={statusPembiayaan}
-                        onValueChange={setStatusPembiayaan}
-                    >
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value={idUmum} id="umum" />
-                            <Label htmlFor="umum">Umum</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <RadioGroupItem value={idBpjs} id="bpjs" />
-                            <Label htmlFor="bpjs">BPJS</Label>
-                        </div>
-                    </RadioGroup>
+                    {idUmum && idBpjs && (
+                        <RadioGroup
+                            className="flex flex-row items-center gap-10"
+                            value={statusPembiayaan}
+                            onValueChange={setStatusPembiayaan}
+                        >
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value={idUmum} id="umum" />
+                                <Label htmlFor="umum">Umum</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value={idBpjs} id="bpjs" />
+                                <Label htmlFor="bpjs">BPJS</Label>
+                            </div>
+                        </RadioGroup>
+                    )}
+                    
                     {statusPembiayaan === idBpjs && (
                         <InputField
                             id="bpjs"

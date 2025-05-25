@@ -7,6 +7,9 @@ import TableDokter, {TableDokterData} from "@/components/dokter/TableDokter";
 import {useEffect, useState} from "react";
 import {fetchDoctors, fetchStatistikDoctor} from "@/lib/api/admin";
 
+// Prevent prerendering for this page
+export const dynamic = 'force-dynamic';
+
 export default function DokterPage() {
 
     const [data, setData] = useState<TableDokterData[]>([])
@@ -14,46 +17,66 @@ export default function DokterPage() {
         totalDokter: number
         dokterAktifHariIni: number
         jumlahKunjunganHariIni: number
-    } | null>(null)
+    }>({
+        totalDokter: 0,
+        dokterAktifHariIni: 0,
+        jumlahKunjunganHariIni: 0
+    })
     const [loading, setLoading] = useState(true)
 
-    const fetchDataDokter = async () => {
-        try {
-            const response = await fetchDoctors()
-            const mappedData : TableDokterData[] = response.map((dokter: TableDokterData) => ({
-                id: dokter.id,
-                nama: dokter.nama,
-                fotoProfil: dokter.fotoProfil,
-                gender: dokter.gender,
-                status: dokter.status,
-            }))
-
-            setData(mappedData)
-        } catch (error) {
-            console.error("Gagal mengambil data dokter: ", error)
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const fetchSummaryDoctor = async () => {
-        try {
-            const res = await fetchStatistikDoctor()
-            setSummary(res)
-        } catch (error) {
-            console.error("Gagal mengambil statistik dokter: ", error)
-        }
-    }
-
     useEffect(() => {
-        fetchSummaryDoctor()
-        fetchDataDokter()
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [statistik, dokter] = await Promise.all([
+                    fetchStatistikDoctor(),
+                    fetchDoctors()
+                ]);
+
+                setSummary(statistik);
+                
+                const mappedData: TableDokterData[] = dokter.map((d: TableDokterData) => ({
+                    id: d.id,
+                    nama: d.nama,
+                    fotoProfil: d.fotoProfil,
+                    gender: d.gender,
+                    status: d.status,
+                }));
+                
+                setData(mappedData);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     if (loading) {
         return (
-            <div className="flex-1 justify-center items-center">
-                <p className="text-gray-500">Loading...</p>
+            <div className="p-4 flex flex-col gap-8">
+                <div className="flex flex-row items-center justify-between gap-10">
+                    <CardStats
+                        title="Total Dokter"
+                        value={0}
+                        logo={<People/>}
+                    />
+                    <CardStats
+                        title="Aktif Hari Ini"
+                        value={0}
+                        logo={<Doctor/>}
+                    />
+                    <CardStats
+                        title="Kunjungan Hari Ini"
+                        value={0}
+                        logo={<CalendarDays/>}
+                    />
+                </div>
+                <div className="flex-1 justify-center items-center">
+                    <p className="text-gray-500">Loading data...</p>
+                </div>
             </div>
         )
     }
@@ -64,17 +87,17 @@ export default function DokterPage() {
             <div className="flex flex-row items-center justify-between gap-10">
                 <CardStats
                     title="Total Dokter"
-                    value={summary?.totalDokter}
+                    value={summary.totalDokter}
                     logo={<People/>}
                 />
                 <CardStats
                     title="Aktif Hari Ini"
-                    value={summary?.dokterAktifHariIni}
+                    value={summary.dokterAktifHariIni}
                     logo={<Doctor/>}
                 />
                 <CardStats
                     title="Kunjungan Hari Ini"
-                    value={summary?.jumlahKunjunganHariIni}
+                    value={summary.jumlahKunjunganHariIni}
                     logo={<CalendarDays/>}
                 />
             </div>

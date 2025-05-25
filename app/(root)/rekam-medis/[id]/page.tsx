@@ -9,26 +9,27 @@ import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {fetchRekamMedisPasien} from "@/lib/api/admin";
 import {layananMap} from "@/lib/utils";
+import { RekamMedisResponse } from "@/types/admin";
 
 export default function RekamMedisPage() {
     const { id } = useParams()
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<RekamMedisResponse | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchData = async () => {
-        try {
-            const response = await fetchRekamMedisPasien(id as string)
-            setData(response)
-        } catch (error) {
-            console.error("Error fetching medical record:", error)
-        } finally {
-            setLoading(false);
-        }
-    }
+    
 
     useEffect(() => {
         if (!id) return;
-
+            const fetchData = async () => {
+            try {
+                const response = await fetchRekamMedisPasien(id as string)
+                setData(response)
+            } catch (error) {
+                console.error("Error fetching medical record:", error)
+            } finally {
+                setLoading(false);
+            }
+        }
         fetchData()
     }, [id]);
 
@@ -46,7 +47,7 @@ export default function RekamMedisPage() {
         obatYangSedangDikonsumsi:
             data.subjectiveNote?.obatDikonsumsi
                 ?.map((o: { keterangan: string; }) => o.keterangan?.trim())
-                .filter((k: string | any[]) => k && k.length > 0)
+                .filter((k: string) => k && k.length > 0)
                 .join(", ") || "-"
     }
     const objective : ObjectiveNoteProps = {
@@ -70,13 +71,13 @@ export default function RekamMedisPage() {
     };
 
     const utama = data.assessmentNote?.diagnosisPasien?.find(
-        (d: any) => d.jenisDiagnosis === "Utama"
+        (d) => d.jenisDiagnosis === "Utama"
     );
     const banding = data.assessmentNote?.diagnosisPasien?.find(
-        (d: any) => d.jenisDiagnosis === "Banding"
+        (d) => d.jenisDiagnosis === "Banding"
     );
     const lainnya = data.assessmentNote?.diagnosisPasien?.filter(
-        (d: any) => d.jenisDiagnosis === "Lain"
+        (d) => d.jenisDiagnosis === "Lain"
     );
 
     const assessment = {
@@ -94,7 +95,7 @@ export default function RekamMedisPage() {
             : null,
         lainnya:
             lainnya && lainnya.length > 0
-                ? lainnya.map((item: any) => ({
+                ? lainnya.map((item) => ({
                     diagnosa: item.kodeKlinis?.Display || "-",
                     description: item.deskripsi || "-",
                 }))
@@ -107,12 +108,12 @@ export default function RekamMedisPage() {
     const layanan = rawLayanan ? layananMap[rawLayanan] || rawLayanan : "-";
 
 
-    const pengobatan = rencanaKlinis.find((r: any) => r.jenisRencana === "Tindakan");
-    const edukasi = rencanaKlinis.find((r: any) => r.jenisRencana === "Edukasi");
-    const monitoring = rencanaKlinis.find((r: any) => r.jenisRencana === "Monitoring");
-    const lainnyaRencana = rencanaKlinis.find((r: any) => r.jenisRencana === "Lainnya");
+    const pengobatan = rencanaKlinis.find((r) => r.jenisRencana === "Tindakan");
+    const edukasi = rencanaKlinis.find((r) => r.jenisRencana === "Edukasi");
+    const monitoring = rencanaKlinis.find((r) => r.jenisRencana === "Monitoring");
+    const lainnyaRencana = rencanaKlinis.find((r) => r.jenisRencana === "Lainnya");
 
-    const itemObat = data.resepObat?.itemObat?.map((item: any) => ({
+    const itemObat = data.resepObat?.itemObat?.map((item) => ({
         namaObat: item.obat?.namaObat || "-",
         frekuensi: item.frekuensi || "-",
         keterangan: item.aturan_pakai || "-",
@@ -130,7 +131,7 @@ export default function RekamMedisPage() {
         monitoring: monitoring
             ? {
                 deskripsi: monitoring.deskripsi,
-                tanggalRencana: monitoring.tanggalRencana,
+                tanggalRencana: monitoring.tanggalRencana ?? "-",
             }
             : undefined,
         lainnya: lainnyaRencana

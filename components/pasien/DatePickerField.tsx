@@ -1,7 +1,10 @@
+"use client"
+
 import * as React from "react"
 import { format } from "date-fns"
 import { id as localeID } from "date-fns/locale"
 import { CalendarIcon } from "lucide-react"
+import { useState, useEffect } from "react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -19,6 +22,20 @@ type DatePickerFieldProps = {
 }
 
 export default function DatePickerField({selectedDate, onChange, label} : DatePickerFieldProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return (
+            <div className="w-full flex flex-col gap-2">
+                <p className="text-sm font-medium">{label} <span className="text-red-500">*</span></p>
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"></div>
+            </div>
+        );
+    }
 
 
     return (
@@ -33,7 +50,7 @@ export default function DatePickerField({selectedDate, onChange, label} : DatePi
                             !selectedDate && "text-muted-foreground"
                         )}
                     >
-                        <CalendarIcon />
+                        <CalendarIcon className="mr-2 h-4 w-4" />
                         {selectedDate ? format(selectedDate, "PPPP", { locale: localeID}) : <span>Pick a date</span>}
                     </Button>
                 </PopoverTrigger>

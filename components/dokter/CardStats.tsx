@@ -3,7 +3,7 @@ import React from "react";
 
 export type CardStatsProps = {
     title: string;
-    value: number | undefined;
+    value: number;  // Remove undefined since we'll always provide a number
     logo: React.ReactNode;
 }
 
@@ -17,7 +17,7 @@ export default function CardStats({title, value, logo} : CardStatsProps) {
                         {logo}
                     </div>
                 </CardTitle>
-                <CardDescription className="text-[24px] text-black font-semibold">{value}</CardDescription>
+                <CardDescription className="text-[24px] text-black font-semibold">{value.toLocaleString()}</CardDescription>
             </CardHeader>
         </Card>
     )

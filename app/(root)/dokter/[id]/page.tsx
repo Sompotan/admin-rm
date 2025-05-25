@@ -5,16 +5,43 @@ import {useEffect, useState} from "react";
 import {fetchDokterById} from "@/lib/api/admin";
 import {useParams} from "next/navigation";
 
+type DataDokterProps = {
+    id: string;
+    namaLengkap: string;
+    nomorHandphone: string;
+    nik: string;
+    jenisKelamin: string;
+    tanggalLahir: string;
+    fotoProfil: string | null;
+    kualifikasi: {
+        jenis: string;
+        nomor: string;
+        tanggalMulai: string;
+        tanggalBerakhir: string;
+        institusiPenerbit: string;
+    };
+    alamat: {
+        jalan: string;
+        rtRw: string;
+        lingkungan: string;
+        kelurahanDesa: string;
+        kecamatan: string;
+        kabupatenKota: string;
+    };
+}
+
 export default function DokterDetailPage() {
-    const { id } = useParams()
+    const {id} = useParams()
 
 
-    const [data, setData] = useState<any>(undefined)
+    const [data, setData] = useState<DataDokterProps | undefined>(undefined)
     const [loading, setLoading] = useState(true)
 
-    const fetchData = async () => {
+    
+    useEffect(() => {
+        const fetchData = async () => {
         try {
-            const res = await fetchDokterById( id as string)
+            const res = await fetchDokterById(id as string)
 
 
             setData(res)
@@ -24,8 +51,6 @@ export default function DokterDetailPage() {
             setLoading(false)
         }
     }
-
-    useEffect(() => {
         fetchData()
     }, [id]);
 

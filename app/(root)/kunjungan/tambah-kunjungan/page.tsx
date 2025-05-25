@@ -9,11 +9,16 @@ import DatePickerKunjungan from "@/components/kunjungan/DatePickerKunjungan";
 import AlasanKunjunganField from "@/components/kunjungan/AlasanKunjunganField";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
+import {Options} from "@/types/types";
+
+export const dynamic = "force-dynamic";
+
+
 
 export default function TambahKunjunganPage(){
     const router = useRouter();
-    const [pasienOptions, setPasienOptions] = useState([])
-    const [dokterOptions, setDokterOptions] = useState([])
+    const [pasienOptions, setPasienOptions] = useState<Options[]>([])
+    const [dokterOptions, setDokterOptions] = useState<Options[]>([])
     const [selectedPasien, setSelectedPasien] = useState("")
     const [selectedDokter, setSelectedDokter] = useState("")
     const [selectedDate, setSelectedDate] = useState<Date | undefined>()
@@ -25,13 +30,13 @@ export default function TambahKunjunganPage(){
                 const pasien = await fetchVerifiedPatient()
                 const dokter = await fetchDokter()
                 setPasienOptions(
-                    pasien.map((p: any) => ({
+                    pasien.map((p: {namaLengkap: string, id: string}) => ({
                         label: p.namaLengkap,
                         value: p.id
                     }))
                 )
                 setDokterOptions(
-                    dokter.map((d: any) => ({
+                    dokter.map((d : {nama: string, id: string;}) => ({
                         label: d.nama,
                         value: d.id
                     }))

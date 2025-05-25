@@ -17,3 +17,8 @@ export type CardItemProps = {
     value: number;
     icon: React.ReactNode;
 }
+
+export type Options = {
+    label: string;
+    value: string;
+}

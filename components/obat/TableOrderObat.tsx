@@ -1,13 +1,13 @@
+"use client"
+
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
-
 import {Badge} from "@/components/ui/badge";
-
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import { User } from "lucide-react";
-
+import { useState, useEffect } from "react";
 
 export type ResepObatData = {
     id: string;
@@ -29,7 +29,32 @@ type TableOrderObatProps = {
 }
 
 export default function TableOrderObat({data, onUpdateStatus}: TableOrderObatProps) {
-    const router = useRouter()
+    const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Loading...</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="animate-pulse">
+                        <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+                        <div className="space-y-3">
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                            <div className="h-4 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
 
     const handleDetailClick = (id: string) => {
         router.push(`/obat/${id}`)
@@ -60,13 +85,18 @@ export default function TableOrderObat({data, onUpdateStatus}: TableOrderObatPro
                                 <TableCell>
                                     <div className="flex flex-row items-center gap-2">
                                         {resep.pasien.fotoProfil ? (
-                                            <div className="bg-gray-300 w-10 h-10 rounded-full items-center justify-center flex">
-                                                <Image src={resep.pasien.fotoProfil} alt="Foto Profil" width={20} height={20}/>
+                                            <div className="bg-gray-300 w-10 h-10 rounded-full overflow-hidden relative">
+                                                <Image 
+                                                    src={resep.pasien.fotoProfil} 
+                                                    alt={`Foto profil ${resep.pasien.nama}`}
+                                                    width={40}
+                                                    height={40}
+                                                    className="object-cover"
+                                                />
                                             </div>
-
                                         ) : (
-                                            <div className="w-10 h-10 bg-gray-200 rounded-full items-center justify-center flex">
-                                                <User size={24} color="black"/>
+                                            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                                                <User className="h-6 w-6 text-gray-500" />
                                             </div>
                                         )}
 

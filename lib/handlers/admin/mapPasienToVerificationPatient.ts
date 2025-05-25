@@ -1,11 +1,11 @@
-import {VerificationPatient} from "@/types/verifikasi/types";
+import {PasienDetail, VerificationPatient} from "@/types/verifikasi/types";
 
 
 function formatStatus(status: "menunggu" | "verified"): "Pending" | "Verified" {
     return status === "menunggu" ? "Pending" : "Verified";
 }
 
-export function mapPasienToVerificationPatient (pasien: any): VerificationPatient {
+export function mapPasienToVerificationPatient (pasien : PasienDetail): VerificationPatient {
     return {
         id: pasien.id,
         name: pasien.namaLengkap,

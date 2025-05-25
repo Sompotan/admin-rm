@@ -13,18 +13,20 @@ export default function DetailResepObat() {
     const [data, setData] = useState<GetResepObatDetailResponse | null>(null)
     const [loading, setLoading] = useState(true);
 
-    const fetchDetali = async () => {
-        try {
-            const result = await fetchDetailResepObat(id as string)
-            setData(result)
-        } catch (error) {
-            console.error("Gagal mengambil data resep obat: ", error)
-        } finally {
-            setLoading(false);
-        }
-    }
+    
 
     useEffect(() => {
+            const fetchDetali = async () => {
+            try {
+                const result = await fetchDetailResepObat(id as string)
+                setData(result)
+            } catch (error) {
+                console.error("Gagal mengambil data resep obat: ", error)
+            } finally {
+                setLoading(false);
+            }
+        }
+
         if (id) fetchDetali()
     }, [id]);
 

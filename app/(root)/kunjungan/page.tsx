@@ -9,6 +9,8 @@ import {KunjunganStatusValue} from "@/components/kunjungan/BadgeStatus";
 import {KunjunganData} from "@/types/kunjungan";
 import {checkInKunjungan, getAllKunjungan} from "@/lib/api/admin";
 
+
+
 export default function KunjunganPage() {
 
     const [data, setData] = useState<KunjunganData[]>([])
@@ -67,3 +69,4 @@ export default function KunjunganPage() {
         </div>
     )
 }
+

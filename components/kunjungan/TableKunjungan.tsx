@@ -1,9 +1,32 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import BadgeStatus, {BadgeStatusProps} from "@/components/kunjungan/BadgeStatus";
+import BadgeStatus from "@/components/kunjungan/BadgeStatus";
 import ButtonCheckIn from "@/components/kunjungan/ButtonCheckIn";
 import {TableKunjunganProps} from "@/types/kunjungan";
 
 export default function TableKunjungan({data, onCheckIn}: TableKunjunganProps) {
+    if (!data || data.length === 0) {
+        return (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Pasien</TableHead>
+                        <TableHead>Tanggal Kunjungan</TableHead>
+                        <TableHead>Dokter</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Aksi</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                        <TableCell colSpan={5} className="text-center text-gray-500">
+                            Tidak ada data kunjungan
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        );
+    }
+
     return (
         <Table>
             <TableHeader>
@@ -25,15 +48,18 @@ export default function TableKunjungan({data, onCheckIn}: TableKunjunganProps) {
                             day: "numeric"
                         })}</TableCell>
                         <TableCell>{item.nama_dokter}</TableCell>
-                        <TableCell><BadgeStatus status={item.status as BadgeStatusProps["status"]}/></TableCell>
                         <TableCell>
-                            <ButtonCheckIn status={item.status} onClick={() => {
-                                onCheckIn(item.id)
-                            }}/>
+                            <BadgeStatus status={item.status} />
+                        </TableCell>
+                        <TableCell>
+                            <ButtonCheckIn 
+                                status={item.status}
+                                onClick={() => onCheckIn(item.id)}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
         </Table>
-    )
+    );
 }
